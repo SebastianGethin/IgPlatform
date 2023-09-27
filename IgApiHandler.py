@@ -20,45 +20,36 @@ class ApiHandler:
         return self.base_url + endpoint
 
 
-    def ensure_session(self, session: Session = None):
+    def ensure_session(self, session: Session):
         if session == None:
             session = self.session
         else:
             session = session
         return session
+
+    def prepare_call(self, endpoint: str, session: Session, version: str):
+        url = self.make_url(endpoint)
+        session = self.ensure_session(session)
+        session.headers.update({'VERSION': version})
+        return url, session
     
 
     def post(self, session: Session, endpoint: str, version: str, params: dict = None):
-        url = self.make_url(endpoint)
-        session = self.ensure_session(session)
-        session.headers.update({'VERSION': version})
-        response = session.post(url, json.dumps(params))
+        url, session = self.prepare_session(endpoint, session, version)
+        response = session.post(url, params = json.dumps(params))
         return response
 
     def get(self, session: Session, endpoint: str, version: str, params: dict = None):
-        url = self.make_url(endpoint)
-        session = self.ensure_session(session)
-        session.headers.update({'VERSION': version})
+        url, session = self.prepare_session(endpoint, session, version)
         response = session.get(url, params = json.dumps(params))
         return response
 
     def put(self, session: Session, endpoint: str, version: str, params: dict = None):
-        url = self.make_url(endpoint)
-        session = self.ensure_session(session)
-        session.headers.update({'VERSION': version})
-        response = session.put(url, json.dumps(params))
+        url, session = self.prepare_session(endpoint, session, version)
+        response = session.put(url, params = json.dumps(params))
         return response
     
     def delete(self, session: Session, endpoint: str, version: str, params: dict = None):
-        url = self.make_url(endpoint)
-        session = self.ensure_session(session)
-        session.headers.update({'VERSION': version})
-        response = session.post(url, json.dumps(params))
+        url, session = self.prepare_session(endpoint, session, version)
+        response = session.post(url, params = json.dumps(params))
         return response
-
-    # def callApi(self, operation: Session.function, session: Session, endpoint: str, version: str, params: dict):
-        
-    #     url = self.make_url(endpoint)
-    #     session = self.ensure_session(session)
-    #     session.headers.update({'VERSION': version})
-    #     response = operation(url, json.dumps(params))
