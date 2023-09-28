@@ -28,7 +28,7 @@ class IGREST:
     def create_session(self, session: Session = None):
         session = self.api_handler.ensure_session(session)
         version = '2'
-        endpoint = '/session',
+        endpoint = '/session'
         params = {'identifier': self.config.username,
                   'password': self.config.password}
         response = self.api_handler.post(session = self.session, version = version, endpoint = endpoint, params = params)
